@@ -1,0 +1,185 @@
+﻿@model Movie
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<section class="">
+
+    <div class=" grid grid-cols-3 gap-10 bg-gray-300 p-20 ">
+        <div>
+            <div class="h-[300px]">
+                <img class="w-full h-full object-cover object-center rounded-xl shadow-lg shadow-gray-500" src="~/uploads/@Model.ImageUrl" alt="@Model.ImageUrl">
+            </div>
+        </div>
+        <div class="col-span-2 py-5">
+           <div class="grid grid-cols-4">
+                <div class="">
+                    <div>
+                        <h2 class="font-semibold text-xl tracking-wider">
+                            Title
+                        </h2>
+                        <h2 class="tracking-wider">
+                            @Model.Title
+                        </h2>
+                    </div>
+                    <div>
+                        <h2 class="tracking-wider">
+                            
+                          @for(int i=0;i<5;i++)
+                          {
+                              @if(Model.Rated>=i+1)
+                              {
+                                    <i class="fas fa-star"></i>
+                              }
+                              else if(Model.Rated>=i+0.5)
+                              {
+                                  <i class="fa-regular fa-star-half-stroke"></i>
+                              }
+                              else
+                              {
+                                <i class="fa-regular fa-star"></i>
+                              }
+                            }
+                        </h2>
+                    </div>
+                </div>    
+           </div>
+           
+           <div class="mt-8">
+                <h2 class="text-xl font-bold tracking-wider">Description</h2>
+                <p class="text-justify tracking-wider mt-2">
+                    @Model.Description
+                </p>
+           </div>
+        </div>
+    </div>
+     <div class="my-10 px-20">
+        <h2 class="text-lg font-bold tracking-wider underline">Recent Comments</h2>
+        
+        @if(Model.Comments.Count()>0)
+        {
+            <div class="mt-5 flex flex-col gap-3">
+                @foreach(var item in Model.Comments)
+                {
+                    <div class="px-5 py-2 flex items-center gap-2">
+                        <h2 class="text-lg font-semibold underline">@item.User.UserName</h2>
+                        <p class="font-bold text-gray-600 pl-2">- @item.Text</p>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            
+        <div class="mt-2 px-5">
+            <h2 class="text-red-600 font-bold">- No any comments</h2>
+        </div>
+        }
+    </div>
+    
+    <div class="mt-4 px-20 pb-10">
+        <form asp-controller="Movie" asp-action="Comment" method="POST">
+            <input type="hidden" asp-for="@Model.Comment.MovieId" value="@Model.Id" />
+            <div>
+                <div>
+                    <textarea asp-for="@Model.Comment.Text" class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border border-teal-600 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer h-20" placeholder="Write Comment"></textarea>
+                </div>
+                <span asp-validation-for="@Model.Comment.Text" class="text-red-500 text-sm font-semibold"></span>
+            </div>
+            <div class="mt-5 gap-5">
+                <button type="submit" class=" bg-teal-600 hover:bg-teal-800 duration-500 text-white text-xl font-bold  px-6 py-2 font-xl rounded-md sm:mb-0 ">Post a Comment</button>
+            </div>
+        </form>
+
+        <div class="mt-10">
+            <h2 class="text-lg font-bold tracking-wider underline">Users Rated</h2>
+            <div>
+                @if(Model.Ratings.Count()>0)
+                {
+                    <div class="mt-5 flex flex-col gap-3">
+                        @foreach (var item in Model.Ratings)
+                        {
+                            <div class="px-5 py-2 flex items-center gap-2">
+                                <h2 class="text-lg font-semibold underline">@item.User.UserName</h2>
+                                <div class="font-bold text-gray-600 pl-2">-
+                                    @for (int i = 0; i < 5; i++)
+                                    {
+                                        @if (item.Value >= i + 1)
+                                        {
+                                            <i class="fas fa-star"></i>
+                                        }
+                                        else
+                                        {
+                                            <i class="fa-regular fa-star"></i>
+                                        }
+                                    }
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="mt-2 px-5">
+                        <h2 class="text-red-600 font-bold">- No any Ratings</h2>
+                    </div>
+                }
+            </div>
+        </div>
+
+        @if(!ViewBag.HasRated)
+        {
+            <div class="mt-10 flex flex-col justify-center items-center">
+                <h2 class="text-lg font-bold tracking-wider underline">Rate Movie</h2>
+                    <div class="text-xl mt-2">
+                        <i class="star cursor-pointer fa-regular fa-star"></i>
+                        <i class="star cursor-pointer fa-regular fa-star"></i>
+                        <i class="star cursor-pointer fa-regular fa-star"></i>
+                        <i class="star cursor-pointer fa-regular fa-star"></i>
+                        <i class="star cursor-pointer fa-regular fa-star"></i>
+                    </div>
+                <form asp-controller="Movie" asp-action="AddRating" method="post">
+                        <input type="hidden" asp-for="@Model.Rating.MovieId" value="@Model.Id" />
+                        <input type="hidden" asp-for="@Model.Rating.Value"/>
+                        <div class="mt-2">
+                            <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-xl font-semibold hover:bg-blue-800">Submit</button>
+                        </div>
+                    </form>
+           
+            </div>
+        }
+    </div>
+  
+   </section>
+<script>
+    $(document).ready(function()
+    {
+        const stars=$('.star');
+        const rating = $('#Rating_Value');
+        let currentRating = null;
+        hightlightStar();
+        stars.click(function()
+        {
+            const clickedStar=$(this);
+            const index=stars.index(clickedStar);
+            currentRating=index+1;
+            rating.val(currentRating);
+            hightlightStar();
+        });
+        function hightlightStar()
+        {
+            stars.each(function(index)
+            {
+                if(index+1 <= currentRating)
+                {
+                    $(this).removeClass('fa-regular').addClass('fas');
+                }
+                else
+                {
+                    $(this).removeClass('fas').addClass('fa-regular');
+                }
+            });
+
+        }
+    });
+</script>

@@ -1,0 +1,13 @@
+﻿@using Microsoft.AspNetCore.Identity
+
+@inject UserManager<ApplicationUser> UserManager
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<div class="p-5 flex justify-center items-center h-[100vh]">
+    <div class="">
+        <h2 class="text-xl font-semibold tracking-wider">Welcome @UserManager.GetUserName(User) </h2>
+        <h2 class="text-base font-semibold tracking-wider">Feel Free to Manage </h2>
+    </div>
+</div>

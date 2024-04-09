@@ -1,0 +1,85 @@
+﻿@if (TempData["success"] != null)
+{
+    <div id="toast" class="fixed top-0 right-0  z-[999] inset-0 flex items-end justify-center px-4 py-6 pointer-events-none sm:p-6 sm:items-start sm:justify-end" style="animation: fadeIn 0.5s ease-in forwards;">
+        <!-- Notification panel, dynamically show/hide -->
+        <div class="max-w-sm w-full bg-white border border-green-500 shadow-lg rounded-lg pointer-events-auto">
+            <div class="rounded-lg shadow-xs overflow-hidden">
+                <div class="p-4">
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0">
+                            <!-- Success icon -->
+                            <i class="fas fa-check text-green-500"></i>
+                        </div>
+                        <div class="ml-3 w-0 flex-1 pt-0.5">
+                            <!-- Success message -->
+                            <p class="text-sm leading-5 font-medium text-gray-900">
+                                @TempData["success"]
+                            </p>
+                        </div>
+                        <div class="ml-4 flex-shrink-0 flex">
+                            <!-- Close button -->
+                            <button class="inline-flex text-gray-400 focus:outline-none focus:text-gray-500 transition ease-in-out duration-150"
+                                    onclick="toast()">
+                                <i class="fas fa-xmark"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        setTimeout(() => {
+            toast();
+        }, 5000);
+        // toast message
+        function toast() {
+            let toast = document.getElementById('toast');
+            toast.style.animation = 'fadeOut 0.5s ease-out forwards';
+            setTimeout(() => { toast.style.display = 'none'; }, 500);
+        }
+    </script>
+}
+
+@if (TempData["error"] != null)
+{
+    <div id="toast" class="fixed top-0 right-0  z-[999] inset-0 flex items-end justify-center px-4 py-6 pointer-events-none sm:p-6 sm:items-start sm:justify-end" style="animation: fadeIn 0.5s ease-in forwards;">
+        <!-- Notification panel, dynamically show/hide -->
+        <div class="max-w-sm w-full bg-white border border-green-500 shadow-lg rounded-lg pointer-events-auto">
+            <div class="rounded-lg shadow-xs overflow-hidden">
+                <div class="p-4">
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0">
+                            <!-- Success icon -->
+                            <i class="fas fa-xmark text-red-500"></i>
+                        </div>
+                        <div class="ml-3 w-0 flex-1 pt-0.5">
+                            <!-- Success message -->
+                            <p class="text-sm leading-5 font-medium text-gray-900">
+                                @TempData["error"]
+                            </p>
+                        </div>
+                        <div class="ml-4 flex-shrink-0 flex">
+                            <!-- Close button -->
+                            <button class="inline-flex text-gray-400 focus:outline-none focus:text-gray-500 transition ease-in-out duration-150"
+                                    onclick="toast()">
+                                <i class="fas fa-xmark"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        setTimeout(() => {
+            toast();
+        }, 5000);
+        // toast message
+        function toast() {
+            let toast = document.getElementById('toast');
+            toast.style.animation = 'fadeOut 0.5s ease-out forwards';
+            setTimeout(() => { toast.style.display = 'none'; }, 500);
+        }
+    </script>
+}

@@ -1,0 +1,75 @@
+﻿@model LoginUser
+@{
+    ViewData["Title"] = "Login Page";
+}
+<script>
+    var token = '@ViewBag.Token';
+    if (token) {
+        localStorage.setItem('jwtToken', token);
+    }
+</script>
+<script>
+    var isSet = localStorage.getItem('jwtToken');
+    console.log(isSet);
+    if (isSet) {
+        window.location.href = '@Url.Action("Index","Home")';
+    }
+</script>
+<section class="bg-indigo-50 ">
+    <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
+        <a href="#" class="flex items-center mb-6 text-2xl font-semibold text-indigo-900 ">
+            Movie App
+        </a>
+        <div class="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 ">
+            <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
+                <h1 class="text-xl font-bold leading-tight tracking-tight text-indigo-900 md:text-2xl">
+                    Sign in to your account
+                </h1>
+                <form class="space-y-4 md:space-y-6" asp-action="Login" asp-controller="Authentication" method="POST">
+                    <div>
+                        <label asp-for="Email" class="block mb-2 text-sm font-medium text-indigo-900 ">Your email</label>
+                        <input type="email" asp-for="Email" class="bg-indigo-50 border border-indigo-300 text-indigo-900 sm:text-sm rounded-lg focus:ring-indigo-600 focus:border-indigo-600 block w-full p-2.5 " placeholder="name@gmail.com">
+                        <span asp-validation-for="Email" class="text-red-500 text-sm font-semibold"></span>
+                    </div>
+                    <div>
+                        <label asp-for="Password" class="block mb-2 text-sm font-medium text-indigo-900 ">Password</label>
+                        <input type="password" asp-for="Password" placeholder="••••••••" class="bg-indigo-50 border border-indigo-300 text-indigo-900 sm:text-sm rounded-lg focus:ring-indigo-600 focus:border-indigo-600 block w-full p-2.5 ">
+                        <span asp-validation-for="Password" class="text-red-500 text-sm font-semibold"></span>
+                    </div>
+                    <div>
+                        <input id="showPasswordCheckbox" type="checkbox" class="cursor-pointer">
+                        <label for="showPasswordCheckbox" class="cursor-pointer">Show Password</label>
+                    </div>
+                    <div>
+                        <input  type="checkbox" asp-for="RememberMe" class="cursor-pointer">
+                        <label asp-for="RememberMe" class="cursor-pointer">Remember me</label>
+                    </div>
+                    <button type="submit" class="w-full text-white bg-indigo-500 hover:bg-indigo-700 focus:ring-4 focus:outline-none focus:ring-indigo-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center ">Sign in</button>
+                    <div class="flex justify-between">
+                        <p class="text-sm font-light text-indigo-500 ">
+                            Don’t have an account yet?
+                        </p>
+                        <a asp-controller="Authentication" asp-action="Register" class="font-medium text-indigo-600 hover:underline">Sign up</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    function togglePasswordVisibility(inputField, checkboxId) {
+        const passwordInput = document.getElementById(inputField);
+        const checkbox = document.getElementById(checkboxId);
+
+        passwordInput.type = checkbox.checked ? "text" : "password";
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const showPasswordCheckbox = document.getElementById("showPasswordCheckbox");
+
+        showPasswordCheckbox.addEventListener("change", function () {
+            togglePasswordVisibility("Password", "showPasswordCheckbox");
+        });
+    });
+</script>

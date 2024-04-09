@@ -1,0 +1,71 @@
+﻿@model RegisterUser
+@{
+    ViewData["Title"] = "Register Page";
+}
+
+<section class="bg-indigo-50 ">
+    <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
+        <a href="#" class="flex items-center mb-6 text-2xl font-semibold text-indigo-900 ">
+            Movie App
+        </a>
+        <div class="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 ">
+            <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
+                <h1 class="text-xl font-bold leading-tight tracking-tight text-indigo-900 md:text-2xl">
+                    Sign Up
+                </h1>
+                <form class="space-y-4 md:space-y-6" asp-controller="Authentication" asp-action="Register" method="POST">
+                    <div>
+                        <label asp-for="Username" class="block mb-2 text-sm font-medium text-indigo-900 ">Your name</label>
+                        <input type="text" asp-for="Username" class="bg-indigo-50 border border-indigo-300 text-indigo-900 sm:text-sm rounded-lg focus:ring-indigo-600 focus:border-indigo-600 block w-full p-2.5 " placeholder="Enter your name"/>
+                        <span asp-validation-for="Username" class="text-red-500 text-sm font-semibold"></span>
+                    </div>
+                    <div>
+                        <label asp-for="Email" class="block mb-2 text-sm font-medium text-indigo-900 ">Your email</label>
+                        <input type="text" asp-for="Email" class="bg-indigo-50 border border-indigo-300 text-indigo-900 sm:text-sm rounded-lg focus:ring-indigo-600 focus:border-indigo-600 block w-full p-2.5 " placeholder="name@gmail.com">
+                        <span asp-validation-for="Email" class="text-red-500 text-sm font-semibold"></span>
+                    </div>
+                    <div>
+                        <label asp-for="Password" class="block mb-2 text-sm font-medium text-indigo-900 ">Password</label>
+                        <input type="password" asp-for="Password" placeholder="••••••••" class="bg-indigo-50 border border-indigo-300 text-indigo-900 sm:text-sm rounded-lg focus:ring-indigo-600 focus:border-indigo-600 block w-full p-2.5 ">
+                        <span asp-validation-for="Password" class="text-red-500 text-sm font-semibold"></span>
+                    </div>
+                    <div>
+                        <label asp-for="ConfirmPassword" class="block mb-2 text-sm font-medium text-indigo-900 ">Confirm Password</label>
+                        <input type="password" asp-for="ConfirmPassword" placeholder="••••••••" class="bg-indigo-50 border border-indigo-300 text-indigo-900 sm:text-sm rounded-lg focus:ring-indigo-600 focus:border-indigo-600 block w-full p-2.5 ">
+                        <span asp-validation-for="ConfirmPassword" class="text-red-500 text-sm font-semibold"></span>
+                    </div>
+                    <div>
+                        <input id="showPasswordCheckbox" type="checkbox" class="cursor-pointer">
+                        <label for="showPasswordCheckbox" class="cursor-pointer">Show Password</label>
+                    </div>
+                    <button type="submit" class="w-full text-white bg-indigo-500 hover:bg-indigo-700 focus:ring-4 focus:outline-none focus:ring-indigo-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center ">Sign Up</button>
+                    <div class="flex justify-between">
+                        <p class="text-sm font-light text-indigo-500 ">
+                           Already Have a Account?
+                        </p>
+                        <a asp-action="Login" asp-controller="Authentication"  class="font-medium text-indigo-600 hover:underline">Sign in</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    function togglePasswordVisibility(inputField,cInputField,checkboxId) {
+        const passwordInput = document.getElementById(inputField);
+        const cpasswordInput = document.getElementById(cInputField);
+        const checkbox = document.getElementById(checkboxId);
+
+        passwordInput.type = checkbox.checked ? "text" : "password";
+        cpasswordInput.type = checkbox.checked ? "text" : "password";
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const showPasswordCheckbox = document.getElementById("showPasswordCheckbox");
+
+        showPasswordCheckbox.addEventListener("change", function () {
+            togglePasswordVisibility("Password", "ConfirmPassword", "showPasswordCheckbox");
+        });
+    });
+</script>

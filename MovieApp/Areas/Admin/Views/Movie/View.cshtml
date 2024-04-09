@@ -1,0 +1,115 @@
+﻿@model Movie
+@{
+    ViewData["Title"] = "View Movie";
+    int sn = 1;
+}
+<div class="p-5">
+    <h1 class="text-indigo-500 text-4xl text-center underline font-bold ">View Movie</h1>
+        <div class="mt-10">
+            <div class="">
+                <div class="shrink-0 mb-5">
+                    <img id='preview_img' class="h-40 w-40 object-cover rounded-xl" src="~/uploads/@Model.ImageUrl" alt="abc" />
+                </div>
+            </div>
+        </div>
+        <div class="mt-5">
+            <div class="relative">
+                <input asp-for="Title" type="text" class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border border-indigo-600 appearance-none focus:outline-none focus:ring-0 focus:border-indigo-600 peer" disabled placeholder=" " />
+                <label asp-for="Title" class="absolute text-sm text-gray-500 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white  px-2 peer-focus:px-2 peer-focus:text-indigo-600  peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1">Title</label>
+            </div>
+        </div>
+        <div class="mt-5">
+            <div class="relative">
+                <input asp-for="Rated" type="text" class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border border-indigo-600 appearance-none focus:outline-none focus:ring-0 focus:border-indigo-600 peer" disabled placeholder=" " />
+                <label asp-for="Rated" class="absolute text-sm text-gray-500 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white  px-2 peer-focus:px-2 peer-focus:text-indigo-600  peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1">Average Rating</label>
+            </div>
+        </div>
+        <div class="my-5">
+            <div class="relative">
+            <textarea asp-for="Description" class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border border-indigo-600 appearance-none focus:outline-none focus:ring-0 focus:border-indigo-600 peer" disabled placeholder=" "></textarea>
+                <label asp-for="Description" class="absolute text-sm text-gray-500 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white  px-2 peer-focus:px-2 peer-focus:text-indigo-600  peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1">Description</label>
+            </div>
+        </div>
+</div>
+
+@* comment section *@
+<div class="p-5">
+    <h1 class="text-indigo-500 text-xl text-center underline font-bold ">List of Comments</h1>
+    <div class="m-auto mt-5">
+        <div class="mt-5">
+            <table class=" w-full text-center">
+                <thead>
+                    <tr>
+                        <th class="border border-black py-2 font-semibold px-4">SN</th>
+                        <th class="border border-black py-2 font-semibold px-4">User</th>
+                        <th class="border border-black py-2 font-semibold px-4">Coment</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Comments.Count() > 0)
+                    {
+                        @foreach (var item in Model.Comments)
+                        {
+                            <tr>
+                                <td class="border border-black py-2 font-semibold px-4">@sn</td>
+                                <td class="border border-black py-2 font-semibold px-4">@item.User.UserName</td>
+                                <td class="border border-black py-2 font-semibold px-4">@item.Text</td>
+                            </tr>
+                            sn++;
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td class="text-red-500 border border-black py-2 text-xl font-semibold px-4 text-center" colspan="5">No data found</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+
+@* Rating Section *@
+<div class="p-5">
+    <h1 class="text-indigo-500 text-xl text-center underline font-bold ">List of Ratings</h1>
+    <div class="m-auto mt-5">
+        <div class="mt-5">
+            <table class=" w-full text-center">
+                <thead>
+                    <tr>
+                        <th class="border border-black py-2 font-semibold px-4">SN</th>
+                        <th class="border border-black py-2 font-semibold px-4">User</th>
+                        <th class="border border-black py-2 font-semibold px-4">rating</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Ratings.Count() > 0)
+                    {
+                        sn = 1;
+                        @foreach (var item in Model.Ratings)
+                        {
+                            <tr>
+                                <td class="border border-black py-2 font-semibold px-4">@sn</td>
+                                <td class="border border-black py-2 font-semibold px-4">@item.User.UserName</td>
+                                <td class="border border-black py-2 font-semibold px-4">@item.Value</td>
+                            </tr>
+                            sn++;
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td class="text-red-500 border border-black py-2 text-xl font-semibold px-4 text-center" colspan="5">No data found</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+

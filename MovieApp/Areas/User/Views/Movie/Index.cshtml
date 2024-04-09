@@ -1,0 +1,39 @@
+﻿@model IEnumerable<Movie>
+@{
+    ViewData["Title"] = "Movies Page";
+}
+
+<div class="p-20 bg-gray-300 min-h-[80vh]">
+    <div>
+        <h2 class="px-2 text-primary text-4xl font-semibold uppercase tracking-wider">Movies</h2>
+        <hr />
+        <hr />
+    </div>
+    <div class="grid grid-cols-4 gap-5 mt-5">
+        @if (Model.Count() > 0)
+        {
+            @foreach (var item in Model)
+            {
+                <a asp-controller="Movie" asp-action="Details" asp-route-id="@item.Id">
+                    <div>
+                        <div class="rounded-xl overflow-hidden h-[200px]">
+                            <img class="hover:scale-105 duration-500 w-full h-full object-center object-cover" src="~/uploads/@item.ImageUrl" alt="@item.ImageUrl">
+                        </div>
+                        <div class="mt-5">
+                            <h2 class="tracking-wider line-clamp-1 text-3xl font-semibold">@item.Title</h2>
+                            <p class="line-clamp-2 mt-2 tracking-wider">
+                                @item.Description
+                            </p>
+                        </div>
+                    </div>
+                </a>
+            }
+        }
+        else
+        {
+            <div class="mt-2 px-5">
+                <h2 class="text-red-600 font-bold"> No Data Found..!</h2>
+            </div>
+        }
+    </div>
+</div>

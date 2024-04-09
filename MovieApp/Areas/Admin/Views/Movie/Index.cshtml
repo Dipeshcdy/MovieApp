@@ -1,0 +1,79 @@
+﻿
+@model IEnumerable<Movie>
+@{
+    ViewData["Title"] = "Movie Page";
+    var sn = 1;
+}
+
+<div class="p-5">
+
+    <h1 class="text-indigo-500 text-4xl text-center underline font-bold ">List of Movies</h1>
+    <div class="m-auto mt-5">
+        <div class="text-right">
+            <a asp-controller="Movie" asp-action="Create" class=" px-4 py-2 bg-indigo-700 border-2 border-indigo-700 hover:bg-transparent hover:text-indigo-700 duration-500 font-semibold text-white rounded-xl">Create Movie</a>
+        </div>
+        <div class="mt-5">
+            <table class=" w-full text-center">
+                <thead>
+                    <tr>
+                        <th class="border border-black py-2 text-xl font-semibold px-4">SN</th>
+                        <th class="border border-black py-2 text-xl font-semibold px-4">Title</th>
+                        <th class="border border-black py-2 text-xl font-semibold px-4">Image</th>
+                        <th class="border border-black py-2 text-xl font-semibold px-4">Rating</th>
+                        <th class="border border-black py-2 text-xl font-semibold px-4">Action</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Count() > 0)
+                    {
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="border border-black py-2 text-xl font-semibold px-4">@sn</td>
+                                <td class="border border-black py-2 text-xl font-semibold px-4">@item.Title</td>
+                                <td class="border border-black py-2 text-xl font-semibold px-4 flex justify-center">
+                                    <div class="w-[100px] h-[100px] overflow-hidden rounded-xl">
+                                        <img class="hover:scale-110 duration-500 w-full h-full object-cover object-center" src="~/uploads/@item.ImageUrl" alt=""/>
+                                    </div>
+                                </td>
+                                <td class="border border-black py-2 text-xl font-semibold px-4">@item.Rated</td>
+                                <td class="border border-black py-2 text-xl font-semibold px-4">
+                                    <div class="flex gap-3 mx-auto justify-center">
+                                        <a class="font-semibold underline text-indigo-600 hover:text-indigo-800" asp-action="View" asp-controller="Movie" asp-route-id="@item.Id">View</a>
+                                        <a class="font-semibold underline text-indigo-600 hover:text-indigo-800" asp-action="Edit" asp-controller="Movie" asp-route-id="@item.Id">Edit</a>
+                                        <form class="deleteForm" asp-action="Delete" asp-controller="Movie" method="post">
+                                            <input type="hidden" name="Id" value="@item.Id" />
+                                            <button type="submit" class="underline text-red-500 hover:text-red-800">Delete</button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                            sn++;
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td class="text-red-500 border border-black py-2 text-xl font-semibold px-4 text-center" colspan="5">No data found</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $(".deleteForm").click(function () {
+            event.preventDefault();
+            var result = confirm("Are You Sure ?");
+            if (result == true) { 
+                this.submit();
+            }
+        })
+    });
+</script>
+
