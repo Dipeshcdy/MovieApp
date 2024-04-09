@@ -14,9 +14,9 @@ namespace MovieApp.Areas.User.Controllers
         private readonly IMovieRepository _movieRepository;
         private readonly ICommentRepository _commentRepository;
         private readonly IRatingRepository _ratingRepository;
-        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public MovieController(IMovieRepository movieRepository, ICommentRepository commentRepository, IRatingRepository ratingRepository, UserManager<ApplicationUser> userManager)
+        public MovieController(IMovieRepository movieRepository, ICommentRepository commentRepository, IRatingRepository ratingRepository, UserManager<IdentityUser> userManager)
         {
             _movieRepository = movieRepository;
             _commentRepository = commentRepository;
@@ -62,7 +62,7 @@ namespace MovieApp.Areas.User.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Comment(Comment comment)
+        public async Task<IActionResult> Comment(Comment comment)
         {
             IActionResult authResult = HandleAuthentication();
             if (authResult != null)
@@ -71,8 +71,8 @@ namespace MovieApp.Areas.User.Controllers
             }
             if (ModelState.IsValid)
             {
-                var UserId = _userManager.GetUserId(User);
-                comment.UserId = UserId;
+                comment.User= await _userManager.GetUserAsync(User).Result;
+             /*   comment.User=user;*/
                 bool res=_commentRepository.Insert(comment);
                 if (res)
                 {
@@ -87,7 +87,7 @@ namespace MovieApp.Areas.User.Controllers
             {
                 TempData["error"] = "Comment is Required!";
             }
-            return RedirectToAction("Details", new {id=comment.MovieId});
+            return RedirectToAction("Details", new {id=comment.Movie.Id});
         }
 
         public IActionResult AddRating(Rating rating)
@@ -100,7 +100,7 @@ namespace MovieApp.Areas.User.Controllers
             if(ModelState.IsValid)
             {
                 var UserId = _userManager.GetUserId(User);
-                rating.UserId = UserId;
+                rating.User.Id = UserId;
                 bool res=_ratingRepository.Insert(rating);
                 if (res)
                 {
@@ -115,7 +115,7 @@ namespace MovieApp.Areas.User.Controllers
             {
                 TempData["error"] = "Rating is Required!";
             }
-            return RedirectToAction("Details", new { id = rating.MovieId });
+            return RedirectToAction("Details", new { id = rating.Movie.Id });
         }
         [Route("Search")]
 
@@ -141,12 +141,15 @@ namespace MovieApp.Areas.User.Controllers
                 return null;
             }
             var comments = _commentRepository.GetAll();
-            var ratings = _ratingRepository.GetAll().Where(x => x.MovieId == movie.Id);
+            var ratings = _ratingRepository.GetAll().Where(x => x.Movie.Id == movie.Id);
            
             movie.Comments = comments;
             movie.Ratings = ratings;
             return movie;
         }
-        
+        private async IdentityUser? GetResult()
+        {
+            return await _userManager.GetUserAsync(User).Result;
+        }
     }
 }

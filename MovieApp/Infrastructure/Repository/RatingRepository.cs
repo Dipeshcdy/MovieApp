@@ -33,8 +33,8 @@ namespace MovieApp.Infrastructure.Repository
         {
             _context.Ratings.Add(rating);
             _context.SaveChanges();
-            Movie Movie = _movieRepository.GetAll().Where(x => x.Id == rating.MovieId).FirstOrDefault();
-            var ratings=_context.Ratings.Where(x=>x.MovieId==Movie.Id);
+            Movie Movie = _movieRepository.GetAll().Where(x => x.Id == rating.Movie.Id).FirstOrDefault();
+            var ratings=_context.Ratings.Where(x=>x.Movie.Id==Movie.Id);
             if(ratings.Any())
             {
                 float totalRating = 0;

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MovieApp.Data;
 
@@ -11,9 +12,11 @@ using MovieApp.Data;
 namespace MovieApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240409171446_seeder")]
+    partial class seeder
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -51,21 +54,21 @@ namespace MovieApp.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "c086393f-6769-4444-9557-93ace99e8266",
+                            Id = "cdde976b-276b-411d-b7a1-ce28412533c9",
                             ConcurrencyStamp = "1",
                             Name = "Admin",
                             NormalizedName = "Admin"
                         },
                         new
                         {
-                            Id = "57a0a7a9-b0c9-4ad9-ba8f-817151d9648a",
+                            Id = "40a35efb-e68e-45b6-b1c2-0ce8b1d2812d",
                             ConcurrencyStamp = "2",
                             Name = "User",
                             NormalizedName = "User"
                         },
                         new
                         {
-                            Id = "597e894e-6cdd-492e-b848-81aba17cf9a4",
+                            Id = "f431f36a-269e-40b5-9787-af5377b78763",
                             ConcurrencyStamp = "3",
                             Name = "HR",
                             NormalizedName = "HR"
@@ -251,7 +254,7 @@ namespace MovieApp.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("MovieId")
+                    b.Property<int>("MovieId")
                         .HasColumnType("int");
 
                     b.Property<string>("Text")
@@ -259,6 +262,7 @@ namespace MovieApp.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
@@ -279,6 +283,7 @@ namespace MovieApp.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ImageUrl")
@@ -289,6 +294,7 @@ namespace MovieApp.Migrations
                         .HasColumnType("real");
 
                     b.Property<string>("Title")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -378,11 +384,15 @@ namespace MovieApp.Migrations
                 {
                     b.HasOne("MovieApp.Models.Movie", "Movie")
                         .WithMany("Comments")
-                        .HasForeignKey("MovieId");
+                        .HasForeignKey("MovieId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
                         .WithMany()
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Movie");
 

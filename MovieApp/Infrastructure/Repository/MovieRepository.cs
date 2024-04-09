@@ -65,7 +65,7 @@ namespace MovieApp.Infrastructure.Repository
             }
             else
             {
-                return _context.Ratings.Any(r => r.UserId == userId && r.MovieId == movieId);
+                return _context.Ratings.Any(r => r.User.Id == userId && r.Movie.Id == movieId);
             }
         }
 

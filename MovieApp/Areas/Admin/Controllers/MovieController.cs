@@ -207,8 +207,8 @@ namespace MovieApp.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            var comments = _commentRepository.GetAll().Where(x => x.MovieId == movie.Id);
-            var ratings = _ratingRepository.GetAll().Where(x => x.MovieId == movie.Id);
+            var comments = _commentRepository.GetAll().Where(x => x.Movie.Id == movie.Id);
+            var ratings = _ratingRepository.GetAll().Where(x => x.Movie.Id == movie.Id);
             movie.Comments = comments;
             movie.Ratings = ratings;
             return View(movie);

@@ -12,12 +12,12 @@ namespace MovieApp.Areas.User.Controllers
     [Area("User")]
     public class AuthenticationController : Controller
     {
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly UserManager<IdentityUser> _userManager;
+        private readonly SignInManager<IdentityUser> _signInManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IConfiguration _configuration;
 
-        public AuthenticationController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration)
+        public AuthenticationController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -111,7 +111,7 @@ namespace MovieApp.Areas.User.Controllers
                     ModelState.AddModelError("Email", "Email already exists.");
                     return View(registeruser);
                 }
-                ApplicationUser user = new()
+                IdentityUser user = new()
                 {
                     Email = registeruser.Email,
                     SecurityStamp = Guid.NewGuid().ToString(),

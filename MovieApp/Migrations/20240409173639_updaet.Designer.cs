@@ -12,8 +12,8 @@ using MovieApp.Data;
 namespace MovieApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240409100252_initial")]
-    partial class initial
+    [Migration("20240409173639_updaet")]
+    partial class updaet
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -54,21 +54,21 @@ namespace MovieApp.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "80f8b55e-54a0-4e12-95cc-923456626f97",
+                            Id = "2d869b57-4709-41e8-aad4-83d5c1c75e9a",
                             ConcurrencyStamp = "1",
                             Name = "Admin",
                             NormalizedName = "Admin"
                         },
                         new
                         {
-                            Id = "4932522f-54ba-4b70-a369-b37e89f55a33",
+                            Id = "fc0b151b-6904-4ed9-a6eb-b9b26cac6b01",
                             ConcurrencyStamp = "2",
                             Name = "User",
                             NormalizedName = "User"
                         },
                         new
                         {
-                            Id = "72c4cfdc-729f-451a-a4c2-da20bc0d2d51",
+                            Id = "b7169cb8-b8dc-4b69-b7d1-dd83f972713c",
                             ConcurrencyStamp = "3",
                             Name = "HR",
                             NormalizedName = "HR"
@@ -111,11 +111,6 @@ namespace MovieApp.Migrations
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasMaxLength(21)
-                        .HasColumnType("nvarchar(21)");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256)
@@ -168,10 +163,6 @@ namespace MovieApp.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
-
-                    b.HasDiscriminator<string>("Discriminator").HasValue("IdentityUser");
-
-                    b.UseTphMappingStrategy();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -263,7 +254,7 @@ namespace MovieApp.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("MovieId")
+                    b.Property<int?>("MovieId")
                         .HasColumnType("int");
 
                     b.Property<string>("Text")
@@ -271,7 +262,6 @@ namespace MovieApp.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
@@ -319,7 +309,7 @@ namespace MovieApp.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("MovieId")
+                    b.Property<int?>("MovieId")
                         .HasColumnType("int");
 
                     b.Property<string>("UserId")
@@ -336,13 +326,6 @@ namespace MovieApp.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Ratings");
-                });
-
-            modelBuilder.Entity("MovieApp.Models.ApplicationUser", b =>
-                {
-                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
-
-                    b.HasDiscriminator().HasValue("ApplicationUser");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -400,15 +383,11 @@ namespace MovieApp.Migrations
                 {
                     b.HasOne("MovieApp.Models.Movie", "Movie")
                         .WithMany("Comments")
-                        .HasForeignKey("MovieId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("MovieId");
 
-                    b.HasOne("MovieApp.Models.ApplicationUser", "User")
-                        .WithMany("Comments")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
 
                     b.Navigation("Movie");
 
@@ -419,9 +398,7 @@ namespace MovieApp.Migrations
                 {
                     b.HasOne("MovieApp.Models.Movie", "Movie")
                         .WithMany("Ratings")
-                        .HasForeignKey("MovieId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("MovieId");
 
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
                         .WithMany()
@@ -439,11 +416,6 @@ namespace MovieApp.Migrations
                     b.Navigation("Comments");
 
                     b.Navigation("Ratings");
-                });
-
-            modelBuilder.Entity("MovieApp.Models.ApplicationUser", b =>
-                {
-                    b.Navigation("Comments");
                 });
 #pragma warning restore 612, 618
         }

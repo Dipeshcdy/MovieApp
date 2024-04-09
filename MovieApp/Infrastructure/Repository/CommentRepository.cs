@@ -12,8 +12,8 @@ namespace MovieApp.Infrastructure.Repository
         private readonly ApplicationDbContext _context;
         private readonly IConfiguration _configuration;
         private readonly bool _useStoreProcedure;
-        private readonly UserManager<ApplicationUser> _userManager;
-        public CommentRepository(ApplicationDbContext context, IConfiguration configuration,UserManager<ApplicationUser> userManager)
+        private readonly UserManager<IdentityUser> _userManager;
+        public CommentRepository(ApplicationDbContext context, IConfiguration configuration,UserManager<IdentityUser> userManager)
         {
             _context = context;
             _configuration = configuration;
@@ -47,8 +47,8 @@ namespace MovieApp.Infrastructure.Repository
             if (_useStoreProcedure)
             {
                 var result = _context.Database.ExecuteSqlRaw("EXEC InsertComment @UserId,@MovieId,@Text",
-                    new SqlParameter("@UserId",comment.UserId),
-                    new SqlParameter("@MovieId", comment.MovieId),
+                    new SqlParameter("@UserId",comment.User.Id),
+                    new SqlParameter("@MovieId", comment.Movie.Id),
                     new SqlParameter("@Text", comment.Text)
                     );
                 return result == 1;

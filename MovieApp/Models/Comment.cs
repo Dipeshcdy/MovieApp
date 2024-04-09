@@ -9,18 +9,8 @@ namespace MovieApp.Models
     {
         [Key]
         public int Id { get; set; }
-        [Required]
-        [ValidateNever]
-        public string UserId { get; set; }
-
-        [ForeignKey("UserId")]
-        [ValidateNever]
-        public ApplicationUser? User { get; set; }
-        [Required]
-        public int MovieId { get; set; }
-
-        [ForeignKey("MovieId")]
-        [ValidateNever]
+        
+        public IdentityUser? User { get; set; }
         public Movie? Movie { get; set; }
         [Required]
         public String? Text{  get; set; }

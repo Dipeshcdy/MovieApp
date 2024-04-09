@@ -56,7 +56,7 @@
      <div class="my-10 px-20">
         <h2 class="text-lg font-bold tracking-wider underline">Recent Comments</h2>
         
-        @if(Model.Comments.Count()>0)
+        @* @if(Model.Comments.Count()>0)
         {
             <div class="mt-5 flex flex-col gap-3">
                 @foreach(var item in Model.Comments)
@@ -74,12 +74,12 @@
         <div class="mt-2 px-5">
             <h2 class="text-red-600 font-bold">- No any comments</h2>
         </div>
-        }
+        } *@
     </div>
     
     <div class="mt-4 px-20 pb-10">
         <form asp-controller="Movie" asp-action="Comment" method="POST">
-            <input type="hidden" asp-for="@Model.Comment.MovieId" value="@Model.Id" />
+            <input type="hidden" asp-for="@Model.Comment.Movie.Id" value="@Model.Id" />
             <div>
                 <div>
                     <textarea asp-for="@Model.Comment.Text" class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border border-teal-600 appearance-none focus:outline-none focus:ring-0 focus:border-teal-600 peer h-20" placeholder="Write Comment"></textarea>
@@ -139,7 +139,7 @@
                         <i class="star cursor-pointer fa-regular fa-star"></i>
                     </div>
                 <form asp-controller="Movie" asp-action="AddRating" method="post">
-                        <input type="hidden" asp-for="@Model.Rating.MovieId" value="@Model.Id" />
+                        <input type="hidden" asp-for="@Model.Rating.Movie.Id" value="@Model.Id" />
                         <input type="hidden" asp-for="@Model.Rating.Value"/>
                         <div class="mt-2">
                             <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-xl font-semibold hover:bg-blue-800">Submit</button>
