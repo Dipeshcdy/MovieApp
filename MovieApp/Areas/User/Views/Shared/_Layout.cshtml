@@ -65,7 +65,34 @@
         </main>
     </div>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/microsoft-signalr/signalr.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script>
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/jobshub")
+            .configureLogging(signalR.LogLevel.Information)
+            .build();
+
+        async function start() {
+            try {
+                await connection.start();
+                console.log("SignalR Connected.");
+            } catch (err) {
+                console.log(err);
+                setTimeout(start, 5000);
+            }
+        };
+
+        connection.onclose(async () => {
+            await start();
+        });
+
+        start();
+
+        connection.on("ConcurrentJobs", function (message) {
+            console.log(message);
+        });
+    </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

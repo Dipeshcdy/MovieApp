@@ -9,6 +9,7 @@ namespace MovieApp.Infrastructure.Interface
         bool Insert(Movie movie);
         bool Update(Movie movie);
         bool Delete(Movie movie);
+        public Task<int> Count();
         bool HasUserRatedMovie(string UserId, int MovieId);
     }
 }

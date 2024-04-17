@@ -15,6 +15,8 @@ namespace MovieApp.Models
         [ValidateNever]
         public string ImageUrl { get; set; }
         public float? Rated { get; set; }
+        [Required]
+        public DateOnly ReleaseDate { get; set; }
 
         [NotMapped]
         [ValidateNever]

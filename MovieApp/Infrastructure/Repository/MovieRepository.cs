@@ -69,6 +69,13 @@ namespace MovieApp.Infrastructure.Repository
             }
         }
 
+        public async Task<int> Count()
+        {
+            var count = await _context.Movies.CountAsync();
+
+            return count;
+        }
+
         public bool Insert(Movie movie)
         {
             if(_useStoreProcedure)
@@ -124,7 +131,7 @@ namespace MovieApp.Infrastructure.Repository
                     new SqlParameter("@Title", movie.Title),
                     new SqlParameter("@Description", movie.Description),
                     new SqlParameter("@ImageUrl", movie.ImageUrl),
-                    new SqlParameter("@Rated", movie.Rated)
+                    new SqlParameter("@Rated", movie.Rated??0)
                     );
                 if (result != 1)
                 {
@@ -133,10 +140,16 @@ namespace MovieApp.Infrastructure.Repository
             }
             else
             {
+                var existingMovie = _context.Movies.Find(movie.Id);
+                if (existingMovie != null)
+                {
+                    _context.Entry(existingMovie).State = EntityState.Detached;
+                }
                 _context.Movies.Update(movie);
                 _context.SaveChanges();
             }
             return true;
         }
+
     }
 }

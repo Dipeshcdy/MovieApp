@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using MovieApp.Infrastructure.Interface;
 using MovieApp.Models;
+using System.Drawing.Printing;
 using System.Security.Claims;
 
 namespace MovieApp.Areas.User.Controllers
@@ -15,13 +17,17 @@ namespace MovieApp.Areas.User.Controllers
         private readonly ICommentRepository _commentRepository;
         private readonly IRatingRepository _ratingRepository;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IEmailRepository _emailRepository;
+        private readonly IConfiguration _configuration;
 
-        public MovieController(IMovieRepository movieRepository, ICommentRepository commentRepository, IRatingRepository ratingRepository, UserManager<ApplicationUser> userManager)
+        public MovieController(IMovieRepository movieRepository, ICommentRepository commentRepository, IRatingRepository ratingRepository, UserManager<ApplicationUser> userManager, IEmailRepository emailRepository, IConfiguration configuration)
         {
             _movieRepository = movieRepository;
             _commentRepository = commentRepository;
             _ratingRepository = ratingRepository;
             _userManager = userManager;
+            _emailRepository = emailRepository;
+            _configuration = configuration;
         }
 
         private IActionResult HandleAuthentication()
@@ -33,11 +39,17 @@ namespace MovieApp.Areas.User.Controllers
             return null; // Indicates no authorization issue
         }
         [Route("movies")]
+        [HttpGet]
 
-        public IActionResult Index()
+        public IActionResult Index(int page = 1)
         {
+            int pageSize = 2;
+            int count = _movieRepository.Count().Result;
             var movies = _movieRepository.GetAll();
-            return View(movies);
+            var pageRecords=movies.Skip((page-1)*pageSize).Take(pageSize).ToList();
+            ViewBag.Page = page;
+            ViewBag.MaxPage= (count / pageSize) + (count % pageSize != 0 ? 1 : 0);
+            return View(pageRecords);
         }
 
         [HttpGet]
@@ -90,6 +102,7 @@ namespace MovieApp.Areas.User.Controllers
             return RedirectToAction("Details", new {id=comment.MovieId});
         }
 
+        [HttpGet]
         public IActionResult AddRating(Rating rating)
         {
             IActionResult authResult = HandleAuthentication();
@@ -118,6 +131,7 @@ namespace MovieApp.Areas.User.Controllers
             return RedirectToAction("Details", new { id = rating.MovieId });
         }
         [Route("Search")]
+        [HttpGet]
 
         public async Task<IActionResult> Search(string key)
         {
@@ -140,13 +154,29 @@ namespace MovieApp.Areas.User.Controllers
             {
                 return null;
             }
-            var comments = _commentRepository.GetAll();
+            var comments = _commentRepository.GetAll().Where(x=>x.MovieId==movie.Id);
             var ratings = _ratingRepository.GetAll().Where(x => x.MovieId == movie.Id);
-           
+            
             movie.Comments = comments;
             movie.Ratings = ratings;
             return movie;
         }
+
+        [Route("SendEmail")]
+        [HttpPost]
+        public IActionResult sendEmail(int movieId,string email)
+        {
+            IActionResult authResult = HandleAuthentication();
+            if (authResult != null)
+            {
+                return authResult;
+            }
+            Movie movie = GetById(movieId);
+            _emailRepository.sendEmail(movie,email);
+            return RedirectToAction("Index");
+        }
+
         
+
     }
 }

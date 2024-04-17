@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using MovieApp.Data;
@@ -30,16 +31,21 @@ namespace MovieApp.Infrastructure.Repository
 
         public IEnumerable<Comment> GetAll()
         {
+            List<Comment> result;
            if(_useStoreProcedure)
             {
-                var result=_context.Comments.FromSqlRaw("EXEC GetComents").ToList();
-                return result;
+                result=_context.Comments.FromSqlRaw("EXEC GetComents").ToList();
             }
            else
             {
-                var result= _context.Comments.ToList();
-                return result;
+                result= _context.Comments.ToList();
+                
             }
+            foreach (var item in result)
+            {
+                item.User = GetIdentityUserById(item.UserId);
+            }
+            return result;
         }
 
         public bool Insert(Comment comment)
@@ -77,6 +83,11 @@ namespace MovieApp.Infrastructure.Repository
                 _context.SaveChanges();
                 return true;
             }
+        }
+        public ApplicationUser GetIdentityUserById(string userId)
+        {
+            var user =  _userManager.FindByIdAsync(userId).Result;
+            return user;
         }
     }
 }

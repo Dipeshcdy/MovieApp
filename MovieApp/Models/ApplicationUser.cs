@@ -7,7 +7,6 @@ namespace MovieApp.Models
     public class ApplicationUser:IdentityUser
     {
 
-        [NotMapped]
         [ValidateNever]
         public IEnumerable<Comment> Comments { get; set; }
     }

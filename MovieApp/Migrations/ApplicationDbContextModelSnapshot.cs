@@ -51,21 +51,21 @@ namespace MovieApp.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "80f8b55e-54a0-4e12-95cc-923456626f97",
+                            Id = "8a2bedea-0149-4f42-b678-93ae9ead9f03",
                             ConcurrencyStamp = "1",
                             Name = "Admin",
                             NormalizedName = "Admin"
                         },
                         new
                         {
-                            Id = "4932522f-54ba-4b70-a369-b37e89f55a33",
+                            Id = "02ed0106-d28b-42d5-80b4-b7125e3f674e",
                             ConcurrencyStamp = "2",
                             Name = "User",
                             NormalizedName = "User"
                         },
                         new
                         {
-                            Id = "72c4cfdc-729f-451a-a4c2-da20bc0d2d51",
+                            Id = "6a3bc2e4-64dd-4ecc-9af4-d5c249a6dedf",
                             ConcurrencyStamp = "3",
                             Name = "HR",
                             NormalizedName = "HR"
@@ -299,6 +299,9 @@ namespace MovieApp.Migrations
                     b.Property<float?>("Rated")
                         .HasColumnType("real");
 
+                    b.Property<DateOnly>("ReleaseDate")
+                        .HasColumnType("date");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -396,7 +399,7 @@ namespace MovieApp.Migrations
             modelBuilder.Entity("MovieApp.Models.Comment", b =>
                 {
                     b.HasOne("MovieApp.Models.Movie", "Movie")
-                        .WithMany("Comments")
+                        .WithMany()
                         .HasForeignKey("MovieId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -415,12 +418,12 @@ namespace MovieApp.Migrations
             modelBuilder.Entity("MovieApp.Models.Rating", b =>
                 {
                     b.HasOne("MovieApp.Models.Movie", "Movie")
-                        .WithMany("Ratings")
+                        .WithMany()
                         .HasForeignKey("MovieId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
+                    b.HasOne("MovieApp.Models.ApplicationUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -429,13 +432,6 @@ namespace MovieApp.Migrations
                     b.Navigation("Movie");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("MovieApp.Models.Movie", b =>
-                {
-                    b.Navigation("Comments");
-
-                    b.Navigation("Ratings");
                 });
 
             modelBuilder.Entity("MovieApp.Models.ApplicationUser", b =>

@@ -24,7 +24,7 @@ namespace MovieApp.Areas.User.Controllers
             _roleManager = roleManager;
             _configuration = configuration;
         }
-
+        [HttpGet]
         [Route("Login")]
         public IActionResult Login()
         {
@@ -80,7 +80,7 @@ namespace MovieApp.Areas.User.Controllers
             }
             return Unauthorized();*/
         }
-
+        [HttpGet]
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
@@ -88,6 +88,7 @@ namespace MovieApp.Areas.User.Controllers
             return RedirectToAction("Index", "Home");
         }
         [Route("Register")]
+        [HttpGet]
         public IActionResult Register()
         {
             if (User.Identity?.IsAuthenticated ?? false)

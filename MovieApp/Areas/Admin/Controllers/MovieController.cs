@@ -85,7 +85,7 @@ namespace MovieApp.Areas.Admin.Controllers
                         TempData["success"] = "Movie Created Successfully!";
                     }
                     else
-                    {
+                    {   
                         TempData["error"] = "Opps! Something Went Wrong";
                     }
                     return RedirectToAction("Index");
